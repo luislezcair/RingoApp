@@ -1,9 +1,9 @@
 package ar.com.ksys.ringo;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class VisitorActivity extends ActionBarActivity {
+public class VisitorActivity extends Activity {
     private static final String TAG = VisitorActivity.class.getSimpleName();
     private ImageView visitorPictureView;
 

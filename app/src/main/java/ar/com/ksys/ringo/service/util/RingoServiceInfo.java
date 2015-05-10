@@ -12,14 +12,14 @@ import javax.jmdns.ServiceInfo;
  * Service Info, similar to Android's NsdServiceInfo
  */
 public class RingoServiceInfo  implements Parcelable {
-    private String ipv4Address;
-    private String ipv6Address;
-    private String serviceName;
-    private String mucHost;
-    private String mucName;
-    private int port;
+    private final String ipv4Address;
+    private final String ipv6Address;
+    private final String serviceName;
+    private final String mucHost;
+    private final String mucName;
+    private final int port;
 
-    public RingoServiceInfo(Parcel in) {
+    private RingoServiceInfo(Parcel in) {
         ipv4Address = in.readString();
         ipv6Address = in.readString();
         serviceName = in.readString();
@@ -68,7 +68,7 @@ public class RingoServiceInfo  implements Parcelable {
     }
 
     public String getServiceName() {
-        return serviceName;
+        return serviceName.toLowerCase();
     }
 
     /**

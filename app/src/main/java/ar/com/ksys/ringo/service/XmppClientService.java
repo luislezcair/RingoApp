@@ -55,10 +55,11 @@ public class XmppClientService extends Service {
 //        }
 
         RingoServiceInfo sInfo = intent.getParcelableExtra("service_info");
+        Log.d(TAG, "Address: " + sInfo.getServiceHostAddress());
 
         initliazeConnection(sInfo.getServiceName(),
-                            sInfo.getServiceHostAddress(),
-                            sInfo.getPort());
+                sInfo.getServiceHostAddress(),
+                sInfo.getPort());
 
         connection = new XMPPTCPConnection(connectionConfiguration);
 
@@ -97,7 +98,7 @@ public class XmppClientService extends Service {
     /**
      * Create a SSLContext that trusts our self-signed certificate
      */
-    public void initializeSSLContext() {
+    private void initializeSSLContext() {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             InputStream certFile = new BufferedInputStream(getResources().openRawResource(R.raw.xmpp_cert));

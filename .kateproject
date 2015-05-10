@@ -1,0 +1,8 @@
+{
+    "name": "RingoApp",
+    "files": [{ "git": 1 }],
+    "build": {
+        "directory": "/home/luis/Proyectos/RingoApp",
+        "build": "/home/luis/Proyectos/RingoApp/build_and_launch.sh"
+    }
+}
