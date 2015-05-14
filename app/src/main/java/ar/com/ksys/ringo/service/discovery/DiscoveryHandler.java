@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -17,10 +16,12 @@ import javax.jmdns.ServiceListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
 class DiscoveryHandler extends Handler implements ServiceListener {
-    private static final String TAG = DiscoveryHandler.class.getSimpleName();
+    //private static final String TAG = DiscoveryHandler.class.getSimpleName();
 
     public static final int MSG_START_DISCOVERY = 0;
     private static final int MSG_TIMEOUT = 1;
+    private boolean isDiscoveryDown = false;
+    private boolean isDiscoveryStarted = false;
 
     private final Context mContext;
     private WifiManager.MulticastLock multicastLock;
@@ -28,7 +29,6 @@ class DiscoveryHandler extends Handler implements ServiceListener {
     private String mServiceType;
     private String mServiceName;
     private RingoServiceInfo mServiceInfo;
-    private int mTimeout = 6000;
 
     private Runnable mOnServiceResolved;
     private Runnable mOnDiscoveryTimeout;
@@ -42,6 +42,10 @@ class DiscoveryHandler extends Handler implements ServiceListener {
     public void handleMessage(Message msg) {
         switch(msg.what) {
             case MSG_START_DISCOVERY:
+                // If we are already working don't start again
+                if(isDiscoveryStarted) {
+                    return;
+                }
                 mServiceType = msg.getData().getString("service_type");
                 mServiceName = msg.getData().getString("service_name");
                 discover();
@@ -58,28 +62,23 @@ class DiscoveryHandler extends Handler implements ServiceListener {
     }
 
     private void discover() {
+        final int timeout = 5000;
+
         try {
             jmdns = JmDNS.create(InetAddress.getByName("0.0.0.0"));
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
+        isDiscoveryStarted = true;
 
         // Acquire a multicast lock, required for DNS service discovery
         WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         multicastLock = wifiManager.createMulticastLock("RingoDiscoveryLock");
         multicastLock.acquire();
 
-        sendEmptyMessageDelayed(MSG_TIMEOUT, mTimeout);
+        sendEmptyMessageDelayed(MSG_TIMEOUT, timeout);
         jmdns.addServiceListener(mServiceType, this);
-    }
-
-    public void setTimeout(int timeout) {
-        mTimeout = timeout;
-    }
-
-    public int getTimeout() {
-        return mTimeout;
     }
 
     public RingoServiceInfo getServiceInfo() {
@@ -102,20 +101,33 @@ class DiscoveryHandler extends Handler implements ServiceListener {
     }
 
     @Override
-    public void serviceRemoved(ServiceEvent event) {    }
+    public void serviceRemoved(ServiceEvent event) { }
 
     @Override
     public void serviceResolved(ServiceEvent event) {
         mServiceInfo = new RingoServiceInfo(event.getInfo());
+
         if(mOnServiceResolved != null) {
             mOnServiceResolved.run();
         }
+
+        // Release the lock and stop discovery as soon as we have our service
+        tearDown();
     }
 
     private void tearDown() {
-        Log.d(TAG, "Tearing down service discovery");
+        if(isDiscoveryDown) {
+            return;
+        }
+
         jmdns.removeServiceListener(mServiceType, this);
         multicastLock.release();
+
+        // JmDNS takes up to five seconds to close. In case we resolved a service,
+        // our timeout will trigger while this method is blocked in close().
+        // So we set the flag before calling jmdns.close()
+        isDiscoveryDown = true;
+
         try {
             jmdns.close();
         } catch (IOException e) {

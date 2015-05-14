@@ -170,7 +170,8 @@ public class XmppClientService extends Service {
 
                 //multiUserChat.sendMessage("Bonjourrrr pedazo de soquetes!");
             } catch(Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
+                stopSelf();
             }
             return null;
         }
