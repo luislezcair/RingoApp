@@ -21,7 +21,7 @@
         </activity>
 
         <service
-            android:name=".service.XmppClientService"
+            android:name=".service.xmpp.XMPPClientService"
             android:enabled="true"
             android:exported="false" >
         </service>

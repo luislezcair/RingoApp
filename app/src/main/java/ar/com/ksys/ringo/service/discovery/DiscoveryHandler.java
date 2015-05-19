@@ -15,12 +15,10 @@ import javax.jmdns.ServiceListener;
 
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
-class DiscoveryHandler extends Handler implements ServiceListener {
-    //private static final String TAG = DiscoveryHandler.class.getSimpleName();
 
+class DiscoveryHandler extends Handler implements ServiceListener {
     public static final int MSG_START_DISCOVERY = 0;
     private static final int MSG_TIMEOUT = 1;
-    private boolean isDiscoveryDown = false;
     private boolean isDiscoveryStarted = false;
 
     private final Context mContext;
@@ -110,25 +108,14 @@ class DiscoveryHandler extends Handler implements ServiceListener {
         if(mOnServiceResolved != null) {
             mOnServiceResolved.run();
         }
-
-        // Release the lock and stop discovery as soon as we have our service
-        tearDown();
     }
 
     private void tearDown() {
-        if(isDiscoveryDown) {
-            return;
-        }
-
         jmdns.removeServiceListener(mServiceType, this);
         multicastLock.release();
 
-        // JmDNS takes up to five seconds to close. In case we resolved a service,
-        // our timeout will trigger while this method is blocked in close().
-        // So we set the flag before calling jmdns.close()
-        isDiscoveryDown = true;
-
         try {
+            // JmDNS takes up to five seconds to close
             jmdns.close();
         } catch (IOException e) {
             e.printStackTrace();

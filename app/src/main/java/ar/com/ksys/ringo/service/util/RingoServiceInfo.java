@@ -2,6 +2,8 @@ package ar.com.ksys.ringo.service.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 
@@ -18,6 +20,7 @@ public class RingoServiceInfo  implements Parcelable {
     private final String mucHost;
     private final String mucName;
     private final int port;
+    private InputStream mSslCert;
 
     private RingoServiceInfo(Parcel in) {
         ipv4Address = in.readString();
@@ -82,6 +85,14 @@ public class RingoServiceInfo  implements Parcelable {
 
     public int getPort() {
         return port;
+    }
+
+    public void setCertificateFile(InputStream file) {
+        mSslCert = file;
+    }
+
+    public InputStream getCertificateFile() {
+        return mSslCert;
     }
 
     @Override

@@ -2,14 +2,16 @@ package ar.com.ksys.ringo.service.discovery;
 
 import android.app.Service;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.*;
 import android.os.Process;
+import android.util.Log;
 
-import ar.com.ksys.ringo.service.XmppClientService;
+import ar.com.ksys.ringo.service.xmpp.XMPPClientService;
 
 
 public class DiscoveryService extends Service {
-    //private static final String TAG = DiscoveryService.class.getSimpleName();
+    private static final String TAG = DiscoveryService.class.getSimpleName();
     private DiscoveryHandler mHandler;
 
     @Override
@@ -23,8 +25,9 @@ public class DiscoveryService extends Service {
         mHandler.setOnDiscoveryTimeout(new Runnable() {
             @Override
             public void run() {
-                stopSelf();
+                Log.d(TAG, "Timeout on service discovery");
                 thread.quit();
+                stopSelf();
             }
         });
 
@@ -32,7 +35,7 @@ public class DiscoveryService extends Service {
         mHandler.setOnServiceResolved(new Runnable() {
             @Override
             public void run() {
-                Intent xmppIntent = new Intent(DiscoveryService.this, XmppClientService.class);
+                Intent xmppIntent = new Intent(DiscoveryService.this, XMPPClientService.class);
                 xmppIntent.putExtra("service_info", mHandler.getServiceInfo());
                 startService(xmppIntent);
             }

@@ -2,8 +2,7 @@
     <string name="app_name">Ringo</string>
 
     <string name="discover_service">Discover Service</string>
-    <string name="connect_button">XMPP Connect</string>
-    <string name="stop_service">Stop Service</string>
+    <string name="stop_service">Stop XMPP Service</string>
     <string name="title_activity_visitor">VisitorActivity</string>
     <string name="visitor_picture_desc">Visitor picture</string>
 </resources>

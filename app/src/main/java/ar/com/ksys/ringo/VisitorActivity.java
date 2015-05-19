@@ -30,6 +30,10 @@ public class VisitorActivity extends Activity {
         new PictureDownloader().execute(pictureUrl);
     }
 
+    /**
+     * Task that will execute on a separate thread to download the image from
+     * the server and show it on the screen.
+     */
     private class PictureDownloader extends AsyncTask<URL, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(URL... urls) {

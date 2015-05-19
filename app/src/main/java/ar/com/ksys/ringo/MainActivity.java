@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import ar.com.ksys.ringo.service.XmppClientService;
+import ar.com.ksys.ringo.service.xmpp.XMPPClientService;
 import ar.com.ksys.ringo.service.discovery.DiscoveryService;
 
 
@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
         buttonStopService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, XmppClientService.class);
+                Intent intent = new Intent(MainActivity.this, XMPPClientService.class);
                 stopService(intent);
             }
         });
