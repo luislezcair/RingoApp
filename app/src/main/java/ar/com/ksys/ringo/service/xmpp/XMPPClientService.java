@@ -13,7 +13,7 @@ import java.net.URL;
 
 import ar.com.ksys.ringo.R;
 import ar.com.ksys.ringo.VisitorActivity;
-import ar.com.ksys.ringo.service.util.DataRunnable;
+import ar.com.ksys.ringo.service.util.NotificationListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
 public class XMPPClientService extends Service {
@@ -33,9 +33,9 @@ public class XMPPClientService extends Service {
         xmppClientThread = new XMPPClientThread(info);
 
         // This action will be called when a valid JSON object is received (i. e., a visitor arrived)
-        xmppClientThread.setNotificationReceivedAction(new DataRunnable<JSONObject>() {
+        xmppClientThread.setNotificationReceivedAction(new NotificationListener<JSONObject>() {
             @Override
-            public void run(JSONObject json) {
+            public void onNotificationReceived(JSONObject json) {
                 try {
                     URL pictureUrl = new URL(json.getString("picture_url"));
 

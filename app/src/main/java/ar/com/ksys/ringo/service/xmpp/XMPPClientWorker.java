@@ -22,7 +22,7 @@ import java.security.cert.CertificateFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import ar.com.ksys.ringo.service.util.DataRunnable;
+import ar.com.ksys.ringo.service.util.NotificationListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
 class XMPPClientWorker implements MessageListener {
@@ -32,7 +32,7 @@ class XMPPClientWorker implements MessageListener {
     private SSLContext sslContext;
     private XMPPTCPConnection connection;
     private MultiUserChat multiUserChat;
-    private DataRunnable<JSONObject> notificationAction;
+    private NotificationListener<JSONObject> notificationAction;
 
 
     public XMPPClientWorker(RingoServiceInfo info) {
@@ -115,10 +115,10 @@ class XMPPClientWorker implements MessageListener {
 
     /**
      * Set the action to execute when a valid JSON object is received in the chat.
-     * The JSON object is passed as a parameter to the DataRunnable
-     * @param notificationAction Object on which the run() method will be called.
+     * The JSON object is passed as a parameter to the NotificationListener
+     * @param notificationAction Object on which the onNotificationReceived() method will be called.
      */
-    public void setNotificationAction(DataRunnable<JSONObject> notificationAction) {
+    public void setNotificationAction(NotificationListener<JSONObject> notificationAction) {
         this.notificationAction = notificationAction;
     }
 
@@ -131,7 +131,7 @@ class XMPPClientWorker implements MessageListener {
         Log.i(TAG, message.getBody());
         try {
             JSONObject json = new JSONObject(message.getBody());
-            notificationAction.run(json);
+            notificationAction.onNotificationReceived(json);
         } catch (JSONException e) {
             Log.e(TAG, "Invalid message received. Not a JSON object. Ignoring");
         }

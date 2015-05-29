@@ -5,7 +5,7 @@ import android.os.Process;
 
 import org.json.JSONObject;
 
-import ar.com.ksys.ringo.service.util.DataRunnable;
+import ar.com.ksys.ringo.service.util.NotificationListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
 /**
@@ -44,7 +44,7 @@ class XMPPClientThread {
         handler.sendEmptyMessage(MSG_QUIT_THREAD);
     }
 
-    public void setNotificationReceivedAction(DataRunnable<JSONObject> r) {
+    public void setNotificationReceivedAction(NotificationListener<JSONObject> r) {
         worker.setNotificationAction(r);
     }
 
