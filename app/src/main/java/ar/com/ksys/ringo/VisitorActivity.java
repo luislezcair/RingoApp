@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ar.com.ksys.ringo.service.entities.VisitorNotification;
 
 public class VisitorActivity extends Activity {
     private static final String TAG = VisitorActivity.class.getSimpleName();
@@ -25,9 +28,15 @@ public class VisitorActivity extends Activity {
         setContentView(R.layout.activity_visitor);
 
         visitorPictureView = (ImageView) findViewById(R.id.imageView);
+        TextView visitorNameView = (TextView) findViewById(R.id.textVisitorName);
 
-        URL pictureUrl = (URL) getIntent().getSerializableExtra("url");
-        new PictureDownloader().execute(pictureUrl);
+        VisitorNotification notification = getIntent().getParcelableExtra("visitor_notification");
+        new PictureDownloader().execute(notification.getPictureUrl());
+
+        Log.d(TAG, "URL: " + notification.getPictureUrl().toString());
+
+        String visitorNames = TextUtils.join("\n", notification.getVisitors().toArray());
+        visitorNameView.setText(visitorNames);
     }
 
     /**

@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import ar.com.ksys.ringo.R;
 import ar.com.ksys.ringo.VisitorActivity;
 import ar.com.ksys.ringo.service.util.NotificationListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
+import ar.com.ksys.ringo.service.util.VisitorNotificationParser;
 
 public class XMPPClientService extends Service {
     private static final String TAG = XMPPClientService.class.getSimpleName();
@@ -36,18 +33,10 @@ public class XMPPClientService extends Service {
         xmppClientThread.setNotificationReceivedAction(new NotificationListener<JSONObject>() {
             @Override
             public void onNotificationReceived(JSONObject json) {
-                try {
-                    URL pictureUrl = new URL(json.getString("picture_url"));
-
-                    Intent intent = new Intent(XMPPClientService.this, VisitorActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("url", pictureUrl);
-                    startActivity(intent);
-                } catch (MalformedURLException e) {
-                    Log.e(TAG, "The URL received is not valid. This might be due to a server misconfiguration");
-                } catch (JSONException e) {
-                    Log.e(TAG, "There is no URL in this JSON object");
-                }
+                Intent intent = new Intent(XMPPClientService.this, VisitorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("visitor_notification", VisitorNotificationParser.fromJSON(json));
+                startActivity(intent);
             }
         });
 

@@ -2,7 +2,6 @@ package ar.com.ksys.ringo.service.discovery;
 
 import android.app.Service;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.*;
 import android.os.Process;
 import android.util.Log;
