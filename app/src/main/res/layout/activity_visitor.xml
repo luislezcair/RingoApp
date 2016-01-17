@@ -14,4 +14,58 @@
         android:id="@+id/imageView"
         android:contentDescription="@string/visitor_picture_desc"/>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/idTexto"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/idResultado"
+        android:layout_marginTop="35dp"
+        android:text="Resultado"
+        android:layout_below="@+id/btnVisitante"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listita"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/idResultado"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Obtener Lista"
+        android:id="@+id/btnLista"
+        android:layout_below="@+id/idTexto"
+        android:layout_alignRight="@+id/listita"
+        android:layout_alignEnd="@+id/listita" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Obtener Visitante"
+        android:id="@+id/btnVisitante"
+        android:layout_alignBottom="@+id/btnLista"
+        android:layout_toRightOf="@+id/imageView" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Insertar visita"
+        android:id="@+id/btnInsertar"
+        android:layout_above="@+id/idResultado"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
