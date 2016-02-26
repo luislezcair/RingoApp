@@ -7,14 +7,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +56,9 @@ import android.widget.Toast;
 
 import ar.com.ksys.ringo.MainActivity;
 import ar.com.ksys.ringo.R;
+import ar.com.ksys.ringo.VisitActivity;
 import ar.com.ksys.ringo.VisitorActivity;
+
 
 @SuppressWarnings("serial")
 
@@ -68,6 +80,10 @@ public class Menu extends AppCompatActivity {
     AlertReceiver alertReceiver;
     boolean alarmUp;
     boolean alarmUp2;
+    private ListView navList;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +93,10 @@ public class Menu extends AppCompatActivity {
         sesion = new SessionManager(getApplicationContext());
         timbre = new Timbre();
         texto1= (TextView)findViewById(R.id.texto1);
-        texto2= (TextView)findViewById(R.id.texto2);
         sw_activar = (Switch) findViewById(R.id.sw_activar);
         sw_sonido = (Switch)findViewById(R.id.sw_sonido);
         sw_casa = (Switch)findViewById(R.id.sw_casa);
-        btn_cfg = (Button)findViewById(R.id.btn_cfg);
-        cfg_server = (Button)findViewById(R.id.cfg_server);
+
         SharedPreferences settings = getSharedPreferences(VALORES_MENU,MODE_PRIVATE);
         sw_activar.setChecked(settings.getBoolean("Timbre activado",true));
         sw_sonido.setChecked(settings.getBoolean("Sonido activado",true));
@@ -123,9 +137,124 @@ public class Menu extends AppCompatActivity {
         // name
         String nombre = user.get(SessionManager.NOMBRE);
         texto1.setText("Ud ha iniciado sesión como: " +nombre);
-        texto2.setText("Cerrar sesión");
+
         Log.i(TAG, "onCreate");
+
+        this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        this.navList = (ListView) findViewById(R.id.left_drawer);
+        final String[] opciones = getResources().getStringArray(R.array.nav_options);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, opciones);
+        navList.setAdapter(adapter);
+        navList.setOnItemClickListener(new DrawerItemClickListener());
+        //String mtitle = getTitle();
+        drawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                //R.mipmap.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.string.open_drawer,  /* "open drawer" description */
+                R.string.close_drawer  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                // creates call to onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle("Selecciona opción");
+                // creates call to onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu();
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
+
+
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+            selectItem(position);
+        }
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+            // Get text from resources
+            mTitle = getResources().getStringArray(R.array.nav_options)[position];
+            switch (position) {
+                case 0:
+                    Intent i = new Intent(Menu.this, VisitorActivity.class);
+                    startActivity(i);
+                    finish();
+                    break;
+                case 1://completar//
+                    Intent k = new Intent(Menu.this, VisitActivity.class);
+                    startActivity(k);
+                    finish();
+                    break;
+                case 2:
+                    Intent j = new Intent(Menu.this, MainActivity.class);
+                    startActivity(j);
+                    finish();
+                    break;
+                case 3:
+                    Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
+                    myWebLink.setData(Uri.parse("http://www.google.com.ar"));
+                    startActivity(myWebLink);
+                    finish();
+                    break;
+                case 4:
+                    sesion.logoutUsuario();
+                    break;
+            }
+
+             // Highlight the selected item, update the title, and close the drawer
+            navList.setItemChecked(position, true);
+            getSupportActionBar().setTitle(mTitle);
+            drawerLayout.closeDrawer(navList);
+    }
+
+
+
 
     @Override
     protected void onStart(){
@@ -175,9 +304,7 @@ public class Menu extends AppCompatActivity {
         Log.i(TAG, "onRestart");
     }
 
-    public void clickCerrar(View view){
-        sesion.logoutUsuario();
-    }
+
 
     public void clickActivarTimbre(final View view) {
         boolean on = ((Switch) view).isChecked();
@@ -270,20 +397,7 @@ public class Menu extends AppCompatActivity {
         }
     }
 
-    public void clickCfg(View view){
-        /*Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
-        myWebLink.setData(Uri.parse("http://www.google.com.ar"));
-        startActivity(myWebLink);*/
-        Intent i = new Intent(Menu.this, VisitorActivity.class);
-        startActivity(i);
-        finish();
-    }
 
-    public void clickServer (View view){
-        Intent i = new Intent(Menu.this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
 
     public void setAlarma(Long tiempo,String titulo,String mensaje,int id){
         Long alertTime = new GregorianCalendar().getTimeInMillis() + tiempo * 1000;

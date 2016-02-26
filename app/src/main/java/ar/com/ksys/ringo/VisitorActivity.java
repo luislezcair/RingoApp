@@ -117,6 +117,7 @@ public class VisitorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ListarVisitantes tarea = new ListarVisitantes();
                 tarea.execute();
+
             }
         });
 
@@ -475,7 +476,7 @@ public class VisitorActivity extends AppCompatActivity {
 
                 HttpClient httpClient = new DefaultHttpClient();
 
-                HttpGet del = new HttpGet("http://192.168.1.106:8000/doorbell/api/visitors/?page="+j);
+                HttpGet del = new HttpGet("http://192.168.1.103:8000/doorbell/api/visitors/?page="+j);
 
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
@@ -486,9 +487,11 @@ public class VisitorActivity extends AppCompatActivity {
                 try {
                     HttpResponse resp = httpClient.execute(del);
                     String respStr = EntityUtils.toString(resp.getEntity());
+                    Log.i("json",respStr);
 
 
                     JSONObject respJSON = new JSONObject(respStr);
+
 
 
                     arry = respJSON.optJSONArray("results");

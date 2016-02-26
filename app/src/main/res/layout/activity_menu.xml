@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dip">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="RinGo"
-        android:id="@+id/ringo"
-        android:gravity="center"
-        android:background="#ff1fab13"
-        style="ringo" />
 
 
-    <RelativeLayout
+
+        <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:gravity="bottom">
 
-        <TextView
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -35,19 +34,7 @@
             android:layout_alignParentBottom="true" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="rinGo"
-            android:id="@+id/texto2"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="true"
-            android:onClick="clickCerrar"
-            android:clickable="true"
-            android:layout_alignParentBottom="true" />
-
-        <Switch
+            <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Estoy en casa"
@@ -56,17 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestion Visitantes"
-            android:id="@+id/btn_cfg"
-            android:layout_marginBottom="23dp"
-            android:onClick="clickCfg"
-            android:layout_above="@+id/texto1"
-            android:layout_centerHorizontal="true" />
-
-        <Switch
+            <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Activar sonido"
@@ -75,7 +52,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="70dp" />
 
-        <Switch
+            <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Activar timbre"
@@ -85,15 +62,15 @@
             android:layout_marginBottom="70dp"
             android:nestedScrollingEnabled="false" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CFG Servidor"
-            android:id="@+id/cfg_server"
-            android:layout_below="@+id/sw_casa"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="38dp"
-            android:onClick="clickServer" />
-
-    </RelativeLayout>
-</LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>

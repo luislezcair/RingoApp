@@ -33,4 +33,6 @@ dependencies {
     }
     compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.android.support:support-v4:23.0.1'
+    compile 'org.json:json:20151123'
+    compile 'com.google.code.gson:gson:2.6.1'
 }
