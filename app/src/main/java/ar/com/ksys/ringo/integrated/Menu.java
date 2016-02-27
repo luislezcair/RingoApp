@@ -238,7 +238,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 case 3:
                     Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
-                    myWebLink.setData(Uri.parse("http://www.google.com.ar"));
+                    myWebLink.setData(Uri.parse("http://192.168.1.107:8000/doorbell/api/"));
                     startActivity(myWebLink);
                     finish();
                     break;

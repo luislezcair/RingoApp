@@ -1,5 +1,7 @@
 package ar.com.ksys.ringo;
 
+import android.app.ActivityManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,6 +10,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +30,10 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import ar.com.ksys.ringo.integrated.CustomArrayAdapter;
 
 /**
  * Created by Escritorio on 23/02/2016.
@@ -54,6 +62,53 @@ public class VisitActivity extends AppCompatActivity {
         obturl.execute();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                //NavUtils.navigateUpFromSameTask(this);
+
+                ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(getApplicationContext().ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  am.getRunningTasks(10);
+                List<String> backStack = new ArrayList<String>();
+                Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+                while(itr.hasNext()){
+                    ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo)itr.next();
+                    String topActivity = runningTaskInfo.topActivity.getShortClassName();
+                    backStack.add(topActivity.trim());
+                }
+                if(backStack!=null){
+                    if(backStack.get(1).equals(".MainActivity")){
+                        moveTaskToBack(true); // or finish() if you want to finish it. I don't.
+                    } else {
+                        Intent intent = new Intent(this,ar.com.ksys.ringo.integrated.Menu.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        //Changes 'back' button action
+        if(keyCode== KeyEvent.KEYCODE_BACK)
+        {
+            Intent i = new Intent(this, ar.com.ksys.ringo.integrated.Menu.class);
+            startActivity(i);
+            finish();
+        }
+        return true;
+    }
+
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     private class ObtenerURL extends AsyncTask<String, Integer, Boolean> {
 
         private String url;
@@ -66,7 +121,7 @@ public class VisitActivity extends AppCompatActivity {
             listaUrls = new ArrayList<String>();
             for (j = 1; j < 200; j++) {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpGet del = new HttpGet("http://192.168.1.102:8000/doorbell/api/visits/?page=" + j);
+                HttpGet del = new HttpGet("http://192.168.1.107:8000/doorbell/api/visits/?page=" + j);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
@@ -98,9 +153,9 @@ public class VisitActivity extends AppCompatActivity {
             if (result) {
                 //Rellenamos la lista con los nombres de los clientes
                 //Rellenamos la lista con los resultados
-                adaptador = new ArrayAdapter<String>(VisitActivity.this,
+                /*adaptador = new ArrayAdapter<String>(VisitActivity.this,
                         android.R.layout.simple_list_item_1, listaUrls);
-                listita.setAdapter(adaptador);
+                listita.setAdapter(adaptador);*/
                 //Log.i("tag", String.valueOf(listaUrls.size()));
 
                 listOfList = armarListaDeListas(listaUrls, ",");
@@ -157,8 +212,7 @@ public class VisitActivity extends AppCompatActivity {
                 //Rellenamos la lista con los nombres de los clientes
                 //Rellenamos la lista con los resultados
                 listaUrls = concatenarStrings(listOfList,listaUrls);
-                adaptador = new ArrayAdapter<String>(VisitActivity.this,
-                        android.R.layout.simple_list_item_1, listaUrls);
+                CustomArrayAdapter adaptador = new CustomArrayAdapter(getApplicationContext(),listaUrls);
                 listita.setAdapter(adaptador);
             }
         }
