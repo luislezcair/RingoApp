@@ -4,7 +4,9 @@ package ar.com.ksys.ringo.integrated;
  * Created by Escritorio on 27/02/2016.
  */
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ar.com.ksys.ringo.R;
+import ar.com.ksys.ringo.VisitActivity;
+import ar.com.ksys.ringo.service.VisitDetails;
 
 public class CustomArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
@@ -53,7 +57,8 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Ud a hecho click en el item "+String.valueOf(position),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(),"Ud a hecho click en el item "+String.valueOf(position),Toast.LENGTH_SHORT).show();
+                VisitActivity.hacerIntent(getContext(),position,values);
             }
         });
         return convertView;

@@ -99,6 +99,7 @@ public class VisitorActivity extends AppCompatActivity {
 
 
 
+
         //new ObtenerVisitante().execute("http://192.168.1.101:8000/doorbell/api/visitors");
         //ObtenerVisitante visitante = new ObtenerVisitante(this, "http://192.168.1.105:8000/doorbell/api/visitors/56/");
         //visitante.execute();

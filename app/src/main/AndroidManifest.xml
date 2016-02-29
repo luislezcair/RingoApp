@@ -68,7 +68,14 @@
                 android:value=".integrated.Menu"/>
         </activity>
 
-
+        <activity
+            android:name=".service.VisitDetails"
+            android:label="Detalle de la visita"
+            android:parentActivityName=".service.VisitDetails">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".service.VisitDetails"/>
+        </activity>
 
         <activity
             android:name=".integrated.Login"

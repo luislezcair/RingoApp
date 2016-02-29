@@ -1,6 +1,7 @@
 package ar.com.ksys.ringo;
 
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,10 +31,12 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import ar.com.ksys.ringo.integrated.CustomArrayAdapter;
+import ar.com.ksys.ringo.service.VisitDetails;
 
 /**
  * Created by Escritorio on 23/02/2016.
@@ -109,7 +112,15 @@ public class VisitActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    private class ObtenerURL extends AsyncTask<String, Integer, Boolean> {
+    public static void hacerIntent(Context context,int pos,ArrayList<String> st){
+        Intent i = new Intent(context, VisitDetails.class);
+        i.putExtra("posicion",pos);
+        i.putExtra("nombre", st.get(pos));
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+    }
+
+    public class ObtenerURL extends AsyncTask<String, Integer, Boolean> {
 
         private String url;
         private int i;
@@ -121,7 +132,7 @@ public class VisitActivity extends AppCompatActivity {
             listaUrls = new ArrayList<String>();
             for (j = 1; j < 200; j++) {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpGet del = new HttpGet("http://192.168.1.107:8000/doorbell/api/visits/?page=" + j);
+                HttpGet del = new HttpGet("http://192.168.1.105:8000/doorbell/api/visits/?page=" + j);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
