@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip">
+
+
+
+
+        <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/texto1"
+            android:clickable="false"
+            android:gravity="bottom"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true" />
+
+
+            <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estoy en casa"
+            android:id="@+id/sw_casa"
+            android:enabled="false"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+            <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activar sonido"
+            android:id="@+id/sw_sonido"
+            android:layout_above="@+id/sw_casa"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="70dp" />
+
+            <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activar timbre"
+            android:id="@+id/sw_activar"
+            android:layout_above="@+id/sw_sonido"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="70dp"
+            android:nestedScrollingEnabled="false" />
+
+        </RelativeLayout>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>

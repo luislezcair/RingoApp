@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_options">
+        <item>Gestionar visitantes</item>
+        <item>Gestionar visitas</item>
+        <item> Configurar servicio</item>
+        <item>Ir al sitio web</item>
+        <item>Cerrar sesión</item>
+    </string-array>
+</resources>

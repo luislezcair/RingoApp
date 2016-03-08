@@ -5,4 +5,6 @@
     <string name="stop_service">Stop XMPP Service</string>
     <string name="title_activity_visitor">VisitorActivity</string>
     <string name="visitor_picture_desc">Visitor picture</string>
+    <string name="open_drawer">Drawer abierto</string>
+    <string name="close_drawer">Drawer cerrado</string>
 </resources>
