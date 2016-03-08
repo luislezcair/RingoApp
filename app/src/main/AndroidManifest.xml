@@ -4,20 +4,39 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <!-- Permission to Send SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"  >
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".integrated.Menu"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="Configuración Servidor"
+            android:parentActivityName=".integrated.Menu">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".integrated.Menu"/>
         </activity>
 
         <service
@@ -33,8 +52,38 @@
 
         <activity
             android:name=".VisitorActivity"
-            android:label="@string/title_activity_visitor" >
+            android:label="Gestión de visitantes"
+            android:parentActivityName=".integrated.Menu">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".integrated.Menu"/>
         </activity>
+
+        <activity
+            android:name=".VisitActivity"
+            android:label="Gestión de visitas"
+            android:parentActivityName=".integrated.Menu">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".integrated.Menu"/>
+        </activity>
+
+        <activity
+            android:name=".service.VisitDetails"
+            android:label="Detalle de la visita"
+            android:parentActivityName=".service.VisitDetails">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".service.VisitDetails"/>
+        </activity>
+
+        <activity
+            android:name=".integrated.Login"
+            android:label="Acceso a usuario" >
+        </activity>
+
+        <receiver android:name=".integrated.AlertReceiver"/>
+
     </application>
 
 </manifest>
