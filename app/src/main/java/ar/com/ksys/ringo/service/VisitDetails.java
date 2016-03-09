@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import ar.com.ksys.ringo.R;
+import ar.com.ksys.ringo.VisitorActivity;
 
 /**
  * Created by Escritorio on 28/02/2016.
@@ -77,7 +78,7 @@ public class VisitDetails extends AppCompatActivity {
             boolean resul = true;
             HttpClient httpClient = new DefaultHttpClient();
             nroVisita = Integer.parseInt(params[0]);
-            HttpGet del = new HttpGet("http://192.168.1.105:8000/doorbell/api/visits/"+nroVisita);
+            HttpGet del = new HttpGet("http://"+ VisitorActivity.dirIp+"/doorbell/api/visits/"+nroVisita);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);

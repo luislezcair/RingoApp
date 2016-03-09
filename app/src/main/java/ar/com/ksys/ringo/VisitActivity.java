@@ -132,7 +132,7 @@ public class VisitActivity extends AppCompatActivity {
             listaUrls = new ArrayList<String>();
             for (j = 1; j < 200; j++) {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpGet del = new HttpGet("http://192.168.1.105:8000/doorbell/api/visits/?page=" + j);
+                HttpGet del = new HttpGet("http://"+VisitorActivity.dirIp+"/doorbell/api/visits/?page=" + j);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
@@ -172,8 +172,10 @@ public class VisitActivity extends AppCompatActivity {
                 listOfList = armarListaDeListas(listaUrls, ",");
                 for(int k = 0;k < listOfList.size(); k++){
                     for (int l = 0; l < listOfList.get(k).size(); l++){
+                        //Log.i("Prueba",String.valueOf(listOfList.get(k)));
                         ObtenerNombres obtnames = new ObtenerNombres();
                        obtnames.execute(listOfList.get(k).get(l), String.valueOf(k), String.valueOf(l));
+
 
                     }
                 }
@@ -197,6 +199,7 @@ public class VisitActivity extends AppCompatActivity {
             url = params[0];
             i = Integer.parseInt(params[1]);
             j = Integer.parseInt(params[2]);
+            //Log.i("Prueba",url);
             HttpGet del = new HttpGet(url);
             String credentials = "ringo" + ":" + "ringo-123";
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
@@ -209,11 +212,10 @@ public class VisitActivity extends AppCompatActivity {
                 ArrayList<String> rta= new ArrayList<>();
                 rta.add(nombre);
                 listOfList.get(i).set(j, nombre);
-                } catch (
-                    Exception ex
-                    ) {
-                Log.e("ServicioRest", "Error!", ex);
-                resul = false;
+                } catch (Exception ex) {
+                    listOfList.get(i).set(j,"Visitante desconocido");
+                    Log.e("ServicioRest", "Error!", ex);
+                    resul = false;
             }
             return resul;
         }
@@ -222,6 +224,12 @@ public class VisitActivity extends AppCompatActivity {
             if (result) {
                 //Rellenamos la lista con los nombres de los clientes
                 //Rellenamos la lista con los resultados
+                /*Log.i("Prueba",String.valueOf(listOfList.get(i)));
+                Log.i("Prueba2",String.valueOf(listOfList.get(i).size()));*/
+
+                /*if ((listOfList.get(i).size()==0)){
+                    listOfList.get(i).set(0,"Visitante desconocido");
+                }*/
                 listaUrls = concatenarStrings(listOfList,listaUrls);
                 CustomArrayAdapter adaptador = new CustomArrayAdapter(getApplicationContext(),listaUrls);
                 listita.setAdapter(adaptador);

@@ -45,8 +45,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -63,8 +67,11 @@ public class VisitorActivity extends AppCompatActivity {
     private String urlToDelete;
     private String urlToModify;
     private int index;
-    private ArrayList<String> listaFiltrada;
-    private ArrayList<String> listaCompleta;
+    private ArrayList<String> listaFiltradaNombres;
+    private ArrayList<String> listaFiltradaUrls;
+    private ArrayList<String> listaCompletaNombres;
+    private ArrayList<String>listaCompletaUrls;
+
     private ArrayAdapter<String> adaptador;
     //private ArrayAdapter<String> adaptadorCompleto;
     private ListAdapter la;
@@ -73,6 +80,7 @@ public class VisitorActivity extends AppCompatActivity {
     private JSONArray arry;
     private static final String TAG = VisitorActivity.class.getSimpleName();
     private ImageView visitorPictureView;
+    public static final String dirIp = "192.168.1.100:8000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,13 +284,15 @@ public class VisitorActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if (la.getCount()==listaCompleta.size()){
-                                   urlToDelete= getUrl(index,listaCompleta);
-                                   listaCompleta.remove(index);
+                                if (la.getCount()==listaCompletaNombres.size()){
+                                   urlToDelete= getUrl(index,listaCompletaUrls);
+                                   listaCompletaNombres.remove(index);
+                                   listaCompletaUrls.remove(index);
 
-                                }else if (la.getCount()==listaFiltrada.size()) {
-                                    urlToDelete=getUrl(index,listaFiltrada);
-                                    listaFiltrada.remove(index);
+                                }else if (la.getCount()==listaFiltradaNombres.size()) {
+                                    urlToDelete=getUrl(index,listaFiltradaUrls);
+                                    listaFiltradaNombres.remove(index);
+                                    listaFiltradaUrls.remove(index);
                                 }
                                 EliminarVisitante tarea = new EliminarVisitante();
                                 tarea.execute(urlToDelete);
@@ -382,7 +392,8 @@ public class VisitorActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
 
             boolean resul = true;
-            listaFiltrada = new ArrayList<String>();
+            listaFiltradaNombres = new ArrayList<String>();
+            listaFiltradaUrls = new ArrayList<String>();
             count = 0;
 
             for (int j = 1; j < 200; j++) {
@@ -392,8 +403,9 @@ public class VisitorActivity extends AppCompatActivity {
 
                 nombre = params[0];
 
+
                 HttpGet del =
-                        new HttpGet("http://192.168.1.106:8000/doorbell/api/visitors/?page="+j);
+                        new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
 
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
@@ -427,7 +439,8 @@ public class VisitorActivity extends AppCompatActivity {
                         Pattern pattern = Pattern.compile(nombre.toLowerCase());
                         Matcher matcher = pattern.matcher(nombCli.toLowerCase());
                         if (matcher.find() && !nombre.isEmpty()) {
-                            listaFiltrada.add("Nombre: " + nombCli + "\r\nURL:" + url);
+                            listaFiltradaNombres.add(String.valueOf(i+1)+": "+ nombCli);
+                            listaFiltradaUrls.add("URL:" + url);
                             count++;
                         }
 
@@ -453,12 +466,12 @@ public class VisitorActivity extends AppCompatActivity {
 
                  adaptador =
                         new ArrayAdapter<String>(VisitorActivity.this,
-                                android.R.layout.simple_list_item_1, listaFiltrada);
+                                android.R.layout.simple_list_item_1, listaFiltradaNombres);
 
                 listita.setAdapter(adaptador);
                 if (count!=0) {
-                    resultado.setText("Existen " +count.toString()+" visitas a nombre de: "+nombre);
-                } else resultado.setText("No existe visita registrada de ese visitante");
+                    resultado.setText("Existen " +count.toString()+" visitantes con el nombre de: "+nombre);
+                } else resultado.setText("No existe visitante registrado con ese nombre");
             }
         }
     }
@@ -471,13 +484,14 @@ public class VisitorActivity extends AppCompatActivity {
 
         protected Boolean doInBackground(String... params) {
             boolean resul = true;
-            listaCompleta = new ArrayList<String>();
+            listaCompletaNombres = new ArrayList<String>();
+            listaCompletaUrls = new ArrayList<String>();
             for (int j = 1; j < 200; j++) {
 
 
                 HttpClient httpClient = new DefaultHttpClient();
 
-                HttpGet del = new HttpGet("http://192.168.1.103:8000/doorbell/api/visitors/?page="+j);
+                HttpGet del = new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
 
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
@@ -510,7 +524,8 @@ public class VisitorActivity extends AppCompatActivity {
                         String nombCli = obj.getString("name");
                         url = obj.getString("url");
 
-                        listaCompleta.add("Nombre: " + nombCli + "\r\nURL:" + url);
+                        listaCompletaNombres.add(String.valueOf(i+1)+": "+ nombCli);
+                        listaCompletaUrls.add("URL:" + url);
 
 
                         //visitantes[i] = /*idVisita*/ "Nombre:" + nombCli+" URL: "+url;
@@ -532,7 +547,7 @@ public class VisitorActivity extends AppCompatActivity {
                 //Rellenamos la lista con los nombres de los clientes
                 //Rellenamos la lista con los resultados
                 adaptador = new ArrayAdapter<String>(VisitorActivity.this,
-                                android.R.layout.simple_list_item_1, listaCompleta);
+                                android.R.layout.simple_list_item_1, listaCompletaNombres);
 
                 listita.setAdapter(adaptador);
                 setListViewHeightBasedOnChildren(listita);
@@ -557,7 +572,7 @@ public class VisitorActivity extends AppCompatActivity {
 
             HttpClient httpClient = new DefaultHttpClient();
 
-            HttpPost post = new HttpPost("http://192.168.1.106:8000/doorbell/api/visitors/");
+            HttpPost post = new HttpPost("http://"+dirIp+"/doorbell/api/visitors/");
             String credentials = "ringo" + ":" + "ringo-123";
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             post.addHeader("Authorization", "Basic " + base64EncodedCredentials);
@@ -703,10 +718,10 @@ public class VisitorActivity extends AppCompatActivity {
                     InsertarVisitante tarea = new InsertarVisitante();
                     tarea.execute(nombre, bienvenido);
                 } else if (titulo.equals("Editar visitante")) {
-                    if (la.getCount() == listaCompleta.size()) {
-                        urlToModify = getUrl(index, listaCompleta);
-                    } else if (la.getCount() == listaFiltrada.size()) {
-                        urlToModify = getUrl(index, listaFiltrada);
+                    if (la.getCount() == listaCompletaUrls.size()) {
+                        urlToModify = getUrl(index, listaCompletaUrls);
+                    } else if (la.getCount() == listaFiltradaUrls.size()) {
+                        urlToModify = getUrl(index, listaFiltradaUrls);
                     }
                     ActualizarVisitante tarea = new ActualizarVisitante();
                     tarea.execute(urlToModify,nombre,bienvenido);
