@@ -13,12 +13,11 @@ import android.widget.Toast;
  */
 public class Timbre {
     private boolean estaActivado;
-    private boolean tieneSonido;
+    private boolean modoFueraDeCasa;
 
-
-    public Timbre(boolean estaActivado, boolean tieneSonido) {
+    public Timbre(boolean estaActivado,boolean modoFueraDeCasa) {
         this.estaActivado = estaActivado;
-        this.tieneSonido = tieneSonido;
+        this.modoFueraDeCasa = modoFueraDeCasa;
     }
 
     public Timbre(){}
@@ -31,32 +30,28 @@ public class Timbre {
         this.estaActivado = estaActivado;
     }
 
-    public boolean isTieneSonido() {
-        return tieneSonido;
-    }
+    public boolean isModoFueraDeCasa(){return modoFueraDeCasa;}
 
-    public void setTieneSonido(boolean tieneSonido) {
-        this.tieneSonido = tieneSonido;
-    }
+    public void setModoFueraDeCasa(boolean modoFueraDeCasa){this.modoFueraDeCasa = modoFueraDeCasa;}
 
     public void activarTimbre(Context context){
         this.setEstaActivado(true);
-        Toast.makeText(context, "timbre activado: " + this.isEstaActivado(), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "timbre activado", Toast.LENGTH_SHORT).show();
     }
 
     public void desactivarTimbre(Context context){
         this.setEstaActivado(false);
-        Toast.makeText(context, "timbre activado: " + this.isEstaActivado(), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "timbre desactivado", Toast.LENGTH_SHORT).show();
     }
 
-    public void activarSonido(Context context){
-        this.setTieneSonido(true);
-        Toast.makeText(context, "sonido activado: " + this.isTieneSonido(), Toast.LENGTH_LONG).show();
+    public void activarModoFueraDeCasa(Context context){
+        this.setModoFueraDeCasa(true);
+        Toast.makeText(context, "modo fuera de casa activado", Toast.LENGTH_SHORT).show();
     }
 
-    public void desactivarSonido(Context context){
-        this.setTieneSonido(false);
-        Toast.makeText(context, "sonido activado: " + this.isTieneSonido(), Toast.LENGTH_LONG).show();
+    public void desactivarModoFueradeCasa(Context context){
+        this.setModoFueraDeCasa(false);
+        Toast.makeText(context, "modo fuera de casa desactivado", Toast.LENGTH_SHORT).show();
     }
 
 

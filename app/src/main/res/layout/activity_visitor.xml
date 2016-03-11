@@ -63,7 +63,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Insertar visita"
+        android:text="Insertar visitante"
         android:id="@+id/btnInsertar"
         android:layout_above="@+id/idResultado"
         android:layout_centerHorizontal="true" />
