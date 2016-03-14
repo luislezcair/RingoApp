@@ -36,10 +36,7 @@ public class SessionManager {
     // User name (make variable public to access from outside)
     public static final String NOMBRE = "nombre";
 
-    // Email address (make variable public to access from outside)
-    public static final String EMAIL = "email";
-
-
+    public static final String PWD = "password";
 
 
     // Constructor
@@ -52,19 +49,14 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void crearSesion(String nombre, String email){
+    public void crearSesion(String nombre, String password){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
         // Storing name in pref
         editor.putString(NOMBRE, nombre);
 
-        // Storing email in pref
-        editor.putString(EMAIL, email);
-
-
-
-
+        editor.putString(PWD,password);
 
         // commit changes
         editor.commit();
@@ -102,9 +94,8 @@ public class SessionManager {
         // user name
         user.put(NOMBRE, pref.getString(NOMBRE, null));
 
-        // user email id
-        user.put(EMAIL, pref.getString(EMAIL, null));
-
+        // user pwd
+        user.put(PWD, pref.getString(PWD, null));
 
         // return user
         return user;

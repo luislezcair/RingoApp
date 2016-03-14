@@ -40,6 +40,9 @@ public class Menu extends AppCompatActivity {
     Switch sw_timbre;
     Switch sw_casa;
     TextView texto1;
+    public static String nombre;
+    public static String password;
+
     private ListView navList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -76,7 +79,8 @@ public class Menu extends AppCompatActivity {
          * */
         sesion.checkLogin();
         HashMap<String, String> user = sesion.getDetallesUsuario();
-        String nombre = user.get(SessionManager.NOMBRE);
+        nombre = user.get(SessionManager.NOMBRE);
+        password = user.get(SessionManager.PWD);
         texto1.setText("Ud ha iniciado sesión como: " + nombre);
 
         this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
