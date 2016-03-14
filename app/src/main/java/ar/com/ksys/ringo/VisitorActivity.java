@@ -1,12 +1,10 @@
 package ar.com.ksys.ringo;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +27,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -40,18 +35,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class VisitorActivity extends AppCompatActivity {
     Button btnVisitante;
@@ -63,16 +54,16 @@ public class VisitorActivity extends AppCompatActivity {
     private String urlToDelete;
     private String urlToModify;
     private int index;
-    private ArrayList<String> listaFiltrada;
-    private ArrayList<String> listaCompleta;
+    private ArrayList<String> listaFiltradaNombres;
+    private ArrayList<String> listaFiltradaUrls;
+    private ArrayList<String> listaCompletaNombres;
+    private ArrayList<String>listaCompletaUrls;
     private ArrayAdapter<String> adaptador;
-    //private ArrayAdapter<String> adaptadorCompleto;
     private ListAdapter la;
-
-    private String[] visitantes;
     private JSONArray arry;
     private static final String TAG = VisitorActivity.class.getSimpleName();
     private ImageView visitorPictureView;
+    public static final String dirIp = "192.168.1.102:8000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,25 +81,7 @@ public class VisitorActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
-
-
-
-
-
-
-
-
-        //new ObtenerVisitante().execute("http://192.168.1.101:8000/doorbell/api/visitors");
-        //ObtenerVisitante visitante = new ObtenerVisitante(this, "http://192.168.1.105:8000/doorbell/api/visitors/56/");
-        //visitante.execute();
-
-
-
-
         //visitorPictureView = (ImageView) findViewById(R.id.imageView);
-
         //URL pictureUrl = (URL) getIntent().getSerializableExtra("url");
         //new PictureDownloader().execute(pictureUrl);
 
@@ -118,8 +91,7 @@ public class VisitorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ListarVisitantes tarea = new ListarVisitantes();
                 tarea.execute();
-
-            }
+                  }
         });
 
         btnVisitante.setOnClickListener(new View.OnClickListener() {
@@ -135,16 +107,10 @@ public class VisitorActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                /*InsertarVisitante tarea = new InsertarVisitante();
-                tarea.execute(
-                        texto.getText().toString());*/
-                        //txtTelefono.getText().toString());
                 mostrarAlertDialog("Nuevo visitante","ingrese el nombre del nuevo visitante");
             }
         });
     }
-
-
 
     /**
      * Task that will execute on a separate thread to download the image from
@@ -177,7 +143,6 @@ public class VisitorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                //NavUtils.navigateUpFromSameTask(this);
 
                 ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(getApplicationContext().ACTIVITY_SERVICE);
                 List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  am.getRunningTasks(10);
@@ -198,7 +163,6 @@ public class VisitorActivity extends AppCompatActivity {
                         finish();
                     }
                 }
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -225,13 +189,6 @@ public class VisitorActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.listitem_menu, menu);
-
-        /*if (v.getId()==R.id.listita) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            menu.setHeaderTitle(visitantes[info.position]);
-            menu.add(Menu.NONE, R.id.edit, Menu.NONE, "Editar visitante");
-            menu.add(Menu.NONE, R.id.delete, Menu.NONE, "Eliminar visitante");
-        }*/
     }
 
     @Override
@@ -241,34 +198,11 @@ public class VisitorActivity extends AppCompatActivity {
         index=info.position;
         la= listita.getAdapter();
 
-
-
         switch (item.getItemId()) {
             case R.id.edit:
-                //Toast.makeText(getApplicationContext(),"click en editar",Toast.LENGTH_SHORT).show();
-
                 mostrarAlertDialog("Editar visitante","Nombre del visitante");
-                /*new AlertDialog.Builder(this)
-                        .setTitle("Eliminar")
-                        .setMessage("¿Desea eliminar el visitante?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                if (la.getCount()==listaCompleta.size()){
-                                    modifyItem(index,listaCompleta);
-                                }else if (la.getCount()==listaFiltrada.size()) {
-                                    modifyItem(index,listaFiltrada);
-                                } ;
-                            }})
-                        .setNegativeButton(android.R.string.no, null).show();*/
-
-
                 return true;
             case R.id.delete:
-                //Toast.makeText(getApplicationContext(),"click en eliminar",Toast.LENGTH_SHORT).show();
-                //if ((listita.)
-
                 new AlertDialog.Builder(this)
                         .setTitle("Eliminar")
                         .setMessage("¿Desea eliminar el visitante?")
@@ -276,35 +210,31 @@ public class VisitorActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if (la.getCount()==listaCompleta.size()){
-                                   urlToDelete= getUrl(index,listaCompleta);
-                                   listaCompleta.remove(index);
+                                if (la.getCount()==listaCompletaNombres.size()){
+                                   urlToDelete= getUrl(index,listaCompletaUrls);
+                                   listaCompletaNombres.remove(index);
+                                   listaCompletaUrls.remove(index);
 
-                                }else if (la.getCount()==listaFiltrada.size()) {
-                                    urlToDelete=getUrl(index,listaFiltrada);
-                                    listaFiltrada.remove(index);
+                                }else if (la.getCount()==listaFiltradaNombres.size()) {
+                                    urlToDelete=getUrl(index,listaFiltradaUrls);
+                                    listaFiltradaNombres.remove(index);
+                                    listaFiltradaUrls.remove(index);
                                 }
                                 EliminarVisitante tarea = new EliminarVisitante();
                                 tarea.execute(urlToDelete);
-                                listita.requestLayout();;
+                                //listita.requestLayout();
                             }})
                         .setNegativeButton(android.R.string.no, null).show();
-
-
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
 
-
-
     private String getUrl(int i,ArrayList<String> al) {
-        //String urltodelate= visitantes[i].valueOf(url);
         String data;
         data = al.get(i);
         int index = 0;
-
         Pattern pattern = Pattern.compile("URL:");
         Matcher matcher = pattern.matcher(data);
         if (matcher.find()) {
@@ -314,37 +244,23 @@ public class VisitorActivity extends AppCompatActivity {
         String url = data.substring(index);
         return url;
     }
-        //Toast.makeText(getApplicationContext(),urlToDelete,Toast.LENGTH_SHORT).show();
-
-
-        /*a.remove(mi);
-        a.notifyDataSetChanged();*/
-
-
 
     private class EliminarVisitante extends AsyncTask<String,Integer,Boolean> {
 
         protected Boolean doInBackground(String... params) {
 
             boolean resul = true;
-
             HttpClient httpClient = new DefaultHttpClient();
-
             String url = params[0];
-
             HttpDelete del = new HttpDelete(url);
-
             String credentials = "ringo" + ":" + "ringo-123";
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
-
             del.setHeader("content-type", "application/json");
 
-            try
-            {
+            try {
                 HttpResponse resp = httpClient.execute(del);
                 String respStr = EntityUtils.toString(resp.getEntity());
-
                 if(!respStr.equals("true"))
                     resul = false;
             }
@@ -353,7 +269,6 @@ public class VisitorActivity extends AppCompatActivity {
                 Log.e("ServicioRest","Error!", ex);
                 resul = false;
             }
-
             return resul;
         }
 
@@ -366,59 +281,37 @@ public class VisitorActivity extends AppCompatActivity {
         }
     }
 
-
-
     private class ObtenerVisitante extends AsyncTask<String,Integer,Boolean> {
 
-        private String[] visitantes;
-        private int idCli;
         private String nombCli;
-        private int telefCli;
         private Integer count;
         private String nombre;
-
         private String url;
 
         protected Boolean doInBackground(String... params) {
 
             boolean resul = true;
-            listaFiltrada = new ArrayList<String>();
+            listaFiltradaNombres = new ArrayList<String>();
+            listaFiltradaUrls = new ArrayList<String>();
             count = 0;
 
             for (int j = 1; j < 200; j++) {
-
-
                 HttpClient httpClient = new DefaultHttpClient();
-
                 nombre = params[0];
-
-                HttpGet del =
-                        new HttpGet("http://192.168.1.106:8000/doorbell/api/visitors/?page="+j);
-
+                HttpGet del = new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
-
-                //del.setHeader("content-type", "application/json");
-
                 try {
                     HttpResponse resp = httpClient.execute(del);
                     String respStr = EntityUtils.toString(resp.getEntity());
-
                     JSONObject respJSON = new JSONObject(respStr);
-
                     arry = respJSON.optJSONArray("results");
                     if (arry==null){
                         break;
                     }
-
-                    //visitantes = new String[arry.length()];
-
-
                     for (int i = 0; i < arry.length(); i++) {
                         JSONObject obj = arry.getJSONObject(i);
-
-                        //int idVisita = obj.getInt("id");
                         if (obj.has("name")) {
                             nombCli = obj.getString("name");
                             url = obj.getString("url");
@@ -427,18 +320,10 @@ public class VisitorActivity extends AppCompatActivity {
                         Pattern pattern = Pattern.compile(nombre.toLowerCase());
                         Matcher matcher = pattern.matcher(nombCli.toLowerCase());
                         if (matcher.find() && !nombre.isEmpty()) {
-                            listaFiltrada.add("Nombre: " + nombCli + "\r\nURL:" + url);
+                            listaFiltradaNombres.add(String.valueOf(i+1)+": "+ nombCli);
+                            listaFiltradaUrls.add("URL:" + url);
                             count++;
                         }
-
-                    /*if (nombCli.toLowerCase().equals(nombre)){
-
-
-                    //visitantes[i]= *//*idVisita*//* "Nombre:" + nombCli;
-                    };*/
-
-                /*if (respJSON.has("name")) {
-                    nombCli = respJSON.getString("name");  */
                     }
                 } catch (Exception ex) {
                     Log.e("ServicioRest", "Error!", ex);
@@ -450,15 +335,16 @@ public class VisitorActivity extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if (result) {
-
-                 adaptador =
-                        new ArrayAdapter<String>(VisitorActivity.this,
-                                android.R.layout.simple_list_item_1, listaFiltrada);
-
+                adaptador = new ArrayAdapter<String>(VisitorActivity.this,
+                                android.R.layout.simple_list_item_1, listaFiltradaNombres);
                 listita.setAdapter(adaptador);
-                if (count!=0) {
-                    resultado.setText("Existen " +count.toString()+" visitas a nombre de: "+nombre);
-                } else resultado.setText("No existe visita registrada de ese visitante");
+                if (nombre.equals("")){
+                    resultado.setText("Por favor ingrese algún nombre");
+                } else{
+                    if (count!=0) {
+                        resultado.setText("Existen " +count.toString()+" visitantes con el nombre de: "+nombre);
+                    } else resultado.setText("No existe visitante registrado con ese nombre");
+                }
             }
         }
     }
@@ -467,125 +353,77 @@ public class VisitorActivity extends AppCompatActivity {
 
         private String url;
 
-
-
         protected Boolean doInBackground(String... params) {
             boolean resul = true;
-            listaCompleta = new ArrayList<String>();
+            listaCompletaNombres = new ArrayList<String>();
+            listaCompletaUrls = new ArrayList<String>();
             for (int j = 1; j < 200; j++) {
-
-
                 HttpClient httpClient = new DefaultHttpClient();
-
-                HttpGet del = new HttpGet("http://192.168.1.103:8000/doorbell/api/visitors/?page="+j);
-
+                HttpGet del = new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
                 String credentials = "ringo" + ":" + "ringo-123";
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
-
-                //del.setHeader("content-type", "application/json");
-
                 try {
                     HttpResponse resp = httpClient.execute(del);
                     String respStr = EntityUtils.toString(resp.getEntity());
-                    Log.i("json",respStr);
-
-
                     JSONObject respJSON = new JSONObject(respStr);
-
-
-
                     arry = respJSON.optJSONArray("results");
                     if (arry==null){
                         break;
                     }
-
-
-                    //visitantes = new String[arry.length()];
-
                     for (int i = 0; i < arry.length(); i++) {
                         JSONObject obj = arry.getJSONObject(i);
-
-                        //int idVisita = obj.getInt("id");
                         String nombCli = obj.getString("name");
                         url = obj.getString("url");
-
-                        listaCompleta.add("Nombre: " + nombCli + "\r\nURL:" + url);
-
-
-                        //visitantes[i] = /*idVisita*/ "Nombre:" + nombCli+" URL: "+url;
+                        listaCompletaNombres.add(String.valueOf(i+1)+": "+ nombCli);
+                        listaCompletaUrls.add("URL:" + url);
                     }
                 } catch (Exception ex) {
                     Log.e("ServicioRest", "Error!", ex);
                     resul = false;
                 }
-
-
             }
             return resul;
         }
 
         protected void onPostExecute(Boolean result) {
 
-            if (result)
-            {
-                //Rellenamos la lista con los nombres de los clientes
-                //Rellenamos la lista con los resultados
+            if (result){
                 adaptador = new ArrayAdapter<String>(VisitorActivity.this,
-                                android.R.layout.simple_list_item_1, listaCompleta);
-
+                                android.R.layout.simple_list_item_1, listaCompletaNombres);
                 listita.setAdapter(adaptador);
                 setListViewHeightBasedOnChildren(listita);
-
-
             }
         }
-
-
-
     }
 
-
-
-
     private class InsertarVisitante extends AsyncTask<String,Integer,Boolean> {
+
         private String nombre;
 
         protected Boolean doInBackground(String... params) {
-
             boolean resul = true;
-
             HttpClient httpClient = new DefaultHttpClient();
-
-            HttpPost post = new HttpPost("http://192.168.1.106:8000/doorbell/api/visitors/");
+            HttpPost post = new HttpPost("http://"+dirIp+"/doorbell/api/visitors/");
             String credentials = "ringo" + ":" + "ringo-123";
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             post.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             post.setHeader("content-type", "application/json");
             nombre = params[0];
 
-            try
-            {
+            try {
                 //Construimos el objeto cliente en formato JSON
                 JSONObject dato = new JSONObject();
-
-
-
-                //dato.put("Id", Integer.parseInt(txtId.getText().toString()));
                 dato.put("name", nombre);
+
                 if (params[1].equals("true")){
                     dato.put("welcome",true);
                 }else dato.put("welcome",false);
-                //dato.put("welcome",params[1]);
 
                 StringEntity entity = new StringEntity(dato.toString());
                 post.setEntity(entity);
-
                 HttpResponse resp = httpClient.execute(post);
                 String respStr = EntityUtils.toString(resp.getEntity());
-                //Toast.makeText(getApplicationContext(),"toast de prueba",Toast.LENGTH_SHORT).show();
-
-
                 if(!respStr.equals("true"))
                     resul = false;
             }
@@ -594,7 +432,6 @@ public class VisitorActivity extends AppCompatActivity {
                 Log.e("ServicioRest","Error!", ex);
                 resul = false;
             }
-
             return resul;
         }
 
@@ -604,22 +441,18 @@ public class VisitorActivity extends AppCompatActivity {
             {
                 Toast.makeText(getApplicationContext(),nombre+ " fue registrado con éxito",Toast.LENGTH_SHORT).show();
                 listita.requestLayout();
-                //resultado.setText("Insertado OK.");
             }
         }
     }
 
     private class ActualizarVisitante extends AsyncTask<String,Integer,Boolean> {
+
         private String nombre;
 
         protected Boolean doInBackground(String... params) {
-
             boolean resul = true;
-
             HttpClient httpClient = new DefaultHttpClient();
-
             String URL =params[0];
-
             HttpPut put = new HttpPut(URL);
             String credentials = "ringo" + ":" + "ringo-123";
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
@@ -627,19 +460,17 @@ public class VisitorActivity extends AppCompatActivity {
             put.setHeader("content-type", "application/json");
             nombre = params[1];
 
-            try
-            {
+            try {
                 //Construimos el objeto cliente en formato JSON
                 JSONObject dato = new JSONObject();
-
                 dato.put("name", nombre);
+
                 if (params[2].equals("true")){
                     dato.put("welcome",true);
                 }else dato.put("welcome",false);
 
                 StringEntity entity = new StringEntity(dato.toString());
                 put.setEntity(entity);
-
                 HttpResponse resp = httpClient.execute(put);
                 String respStr = EntityUtils.toString(resp.getEntity());
 
@@ -651,7 +482,6 @@ public class VisitorActivity extends AppCompatActivity {
                 Log.e("ServicioRest","Error!", ex);
                 resul = false;
             }
-
             return resul;
         }
 
@@ -665,15 +495,24 @@ public class VisitorActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
     public void mostrarAlertDialog(final String titulo,String mensaje) {
+        String texto ="";
         final CheckBox checkBox = new CheckBox(this);
         checkBox.setText("Bienvenido");
         checkBox.setChecked(true);
         final EditText input = new EditText(this);
+
+        if (titulo.equals("Editar visitante")) {
+            if (la.getCount() == listaCompletaNombres.size()) {
+                texto = listaCompletaNombres.get(index);
+            } else if (la.getCount() == listaFiltradaNombres.size()) {
+                texto = (listaFiltradaNombres.get(index));
+            }
+            texto = texto.substring(texto.indexOf(":") + 1);
+            texto = texto.trim();
+            input.setText(texto);
+        }
+
         input.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -686,13 +525,9 @@ public class VisitorActivity extends AppCompatActivity {
         alertDialogBuilder.setView(linearLayout);
         alertDialogBuilder.setTitle(titulo);
         alertDialogBuilder.setMessage(mensaje);
-
-        //alertDialogBuilder.setView(input);
-
-        //alertDialogBuilder.setView(checkBox);
         alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                // do something
+
                 String nombre = input.getText().toString();
                 String bienvenido;
                 if (checkBox.isChecked()) {
@@ -703,23 +538,20 @@ public class VisitorActivity extends AppCompatActivity {
                     InsertarVisitante tarea = new InsertarVisitante();
                     tarea.execute(nombre, bienvenido);
                 } else if (titulo.equals("Editar visitante")) {
-                    if (la.getCount() == listaCompleta.size()) {
-                        urlToModify = getUrl(index, listaCompleta);
-                    } else if (la.getCount() == listaFiltrada.size()) {
-                        urlToModify = getUrl(index, listaFiltrada);
+                    if (la.getCount() == listaCompletaUrls.size()) {
+                        urlToModify = getUrl(index, listaCompletaUrls);
+                    } else if (la.getCount() == listaFiltradaUrls.size()) {
+                        urlToModify = getUrl(index, listaFiltradaUrls);
                     }
                     ActualizarVisitante tarea = new ActualizarVisitante();
                     tarea.execute(urlToModify,nombre,bienvenido);
                     listita.requestLayout();
-                    ;
                 }
             }
         });
         alertDialogBuilder.setNegativeButton(android.R.string.no, null);
         alertDialogBuilder.show();
     }
-
-
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
 
@@ -740,9 +572,6 @@ public class VisitorActivity extends AppCompatActivity {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
-
-
-
 }
 
 
