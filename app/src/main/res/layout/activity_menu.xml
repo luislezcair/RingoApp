@@ -37,30 +37,20 @@
             <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estoy en casa"
+            android:text="Modo fuera de casa"
             android:id="@+id/sw_casa"
-            android:enabled="false"
+            android:enabled="true"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
             <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Activar sonido"
-            android:id="@+id/sw_sonido"
+            android:text="Timbre activado"
+            android:id="@+id/sw_timbre"
             android:layout_above="@+id/sw_casa"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="70dp" />
-
-            <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Activar timbre"
-            android:id="@+id/sw_activar"
-            android:layout_above="@+id/sw_sonido"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="70dp"
-            android:nestedScrollingEnabled="false" />
 
         </RelativeLayout>
     </LinearLayout>

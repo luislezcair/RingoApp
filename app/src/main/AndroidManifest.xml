@@ -82,8 +82,6 @@
             android:label="Acceso a usuario" >
         </activity>
 
-        <receiver android:name=".integrated.AlertReceiver"/>
-
     </application>
 
 </manifest>
