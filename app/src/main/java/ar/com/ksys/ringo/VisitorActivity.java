@@ -3,6 +3,7 @@ package ar.com.ksys.ringo;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -46,6 +47,8 @@ import java.util.regex.Pattern;
 
 import ar.com.ksys.ringo.integrated.Menu;
 import ar.com.ksys.ringo.integrated.SessionManager;
+import ar.com.ksys.ringo.service.util.RingoServiceInfo;
+import ar.com.ksys.ringo.service.xmpp.XMPPClientService;
 
 public class VisitorActivity extends AppCompatActivity {
     Button btnVisitante;
@@ -66,8 +69,7 @@ public class VisitorActivity extends AppCompatActivity {
     private JSONArray arry;
     private static final String TAG = VisitorActivity.class.getSimpleName();
     private ImageView visitorPictureView;
-    public static final String dirIp = "192.168.1.103:8000";
-
+    public static final String dirIp = "192.168.1.100:8000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,7 @@ public class VisitorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ListarVisitantes tarea = new ListarVisitantes();
                 tarea.execute();
-                  }
+            }
         });
 
         btnVisitante.setOnClickListener(new View.OnClickListener() {

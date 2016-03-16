@@ -13,12 +13,14 @@ import java.net.URL;
 
 import ar.com.ksys.ringo.R;
 import ar.com.ksys.ringo.VisitorActivity;
+import ar.com.ksys.ringo.integrated.Timbre;
 import ar.com.ksys.ringo.service.util.NotificationListener;
 import ar.com.ksys.ringo.service.util.RingoServiceInfo;
 
 public class XMPPClientService extends Service {
     private static final String TAG = XMPPClientService.class.getSimpleName();
     private XMPPClientThread xmppClientThread;
+    Timbre timbre;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -27,6 +29,7 @@ public class XMPPClientService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        timbre = new Timbre();
         RingoServiceInfo info = intent.getParcelableExtra("service_info");
         info.setCertificateFile(getResources().openRawResource(R.raw.xmpp_cert));
 
@@ -37,12 +40,14 @@ public class XMPPClientService extends Service {
             @Override
             public void onNotificationReceived(JSONObject json) {
                 try {
+                    //solamente muestra la notificación si el timbre está activado, de lo contrario no hace nada
+                    if (timbre.isEstaActivado()){
                     URL pictureUrl = new URL(json.getString("picture_url"));
-
                     Intent intent = new Intent(XMPPClientService.this, VisitorActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("url", pictureUrl);
                     startActivity(intent);
+                    }
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "The URL received is not valid. This might be due to a server misconfiguration");
                 } catch (JSONException e) {

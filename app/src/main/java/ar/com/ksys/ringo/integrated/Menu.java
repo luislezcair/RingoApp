@@ -1,5 +1,7 @@
 package ar.com.ksys.ringo.integrated;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -7,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -42,7 +45,6 @@ public class Menu extends AppCompatActivity {
     TextView texto1;
     public static String nombre;
     public static String password;
-
     private ListView navList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -66,7 +68,7 @@ public class Menu extends AppCompatActivity {
         sw_casa.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 clickActivarModoFueraDeCasa(buttonView);
-            }
+               }
         });
 
         ObtenerCfg obtcfg = new ObtenerCfg();
@@ -196,6 +198,7 @@ public class Menu extends AppCompatActivity {
         super.onResume();
         ObtenerCfg obtcfg = new ObtenerCfg();
         obtcfg.execute();
+
     }
 
     @Override
@@ -238,7 +241,7 @@ public class Menu extends AppCompatActivity {
         } else {
             //Desactivar timbre
             ModificarCfg modCfg = new ModificarCfg();
-            modCfg.execute("timbre","false");
+            modCfg.execute("timbre", "false");
             timbre.desactivarTimbre(getApplicationContext());
         }
     }
@@ -267,7 +270,7 @@ public class Menu extends AppCompatActivity {
             boolean resul = true;
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet del = new HttpGet("http://"+VisitorActivity.dirIp+"/doorbell/api/configuration/1");
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             try {
@@ -305,7 +308,7 @@ public class Menu extends AppCompatActivity {
             String activado = params[1];
             HttpClient httpClient = new DefaultHttpClient();
             HttpPut put = new HttpPut("http://"+VisitorActivity.dirIp+"/doorbell/api/configuration/1/");
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             put.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             put.setHeader("content-type", "application/json");
