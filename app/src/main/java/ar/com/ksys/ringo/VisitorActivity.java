@@ -3,6 +3,7 @@ package ar.com.ksys.ringo;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -44,6 +45,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ar.com.ksys.ringo.integrated.Menu;
+import ar.com.ksys.ringo.integrated.SessionManager;
+import ar.com.ksys.ringo.service.util.RingoServiceInfo;
+import ar.com.ksys.ringo.service.xmpp.XMPPClientService;
+
 public class VisitorActivity extends AppCompatActivity {
     Button btnVisitante;
     Button btnLista;
@@ -63,7 +69,7 @@ public class VisitorActivity extends AppCompatActivity {
     private JSONArray arry;
     private static final String TAG = VisitorActivity.class.getSimpleName();
     private ImageView visitorPictureView;
-    public static final String dirIp = "192.168.1.102:8000";
+    public static final String dirIp = "192.168.1.100:8000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +97,7 @@ public class VisitorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ListarVisitantes tarea = new ListarVisitantes();
                 tarea.execute();
-                  }
+            }
         });
 
         btnVisitante.setOnClickListener(new View.OnClickListener() {
@@ -107,9 +113,11 @@ public class VisitorActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                mostrarAlertDialog("Nuevo visitante","ingrese el nombre del nuevo visitante");
+                mostrarAlertDialog("Nuevo visitante", "ingrese el nombre del nuevo visitante");
             }
         });
+
+
     }
 
     /**
@@ -253,7 +261,7 @@ public class VisitorActivity extends AppCompatActivity {
             HttpClient httpClient = new DefaultHttpClient();
             String url = params[0];
             HttpDelete del = new HttpDelete(url);
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             del.setHeader("content-type", "application/json");
@@ -299,7 +307,7 @@ public class VisitorActivity extends AppCompatActivity {
                 HttpClient httpClient = new DefaultHttpClient();
                 nombre = params[0];
                 HttpGet del = new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
-                String credentials = "ringo" + ":" + "ringo-123";
+                String credentials = Menu.nombre + ":" + Menu.password;
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
                 try {
@@ -360,7 +368,7 @@ public class VisitorActivity extends AppCompatActivity {
             for (int j = 1; j < 200; j++) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet del = new HttpGet("http://"+dirIp+"/doorbell/api/visitors/?page="+j);
-                String credentials = "ringo" + ":" + "ringo-123";
+                String credentials = Menu.nombre + ":" + Menu.password;
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
                 try {
@@ -405,7 +413,7 @@ public class VisitorActivity extends AppCompatActivity {
             boolean resul = true;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost("http://"+dirIp+"/doorbell/api/visitors/");
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             post.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             post.setHeader("content-type", "application/json");
@@ -454,7 +462,7 @@ public class VisitorActivity extends AppCompatActivity {
             HttpClient httpClient = new DefaultHttpClient();
             String URL =params[0];
             HttpPut put = new HttpPut(URL);
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             put.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             put.setHeader("content-type", "application/json");

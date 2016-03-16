@@ -57,12 +57,12 @@ public class Login extends Activity {
                     // For testing puspose username, password is checked with sample data
                     // username = test
                     // password = test
-                    if(username.equals("test") && password.equals("test")){
+                    if(username.equals("ringo") && password.equals("ringo-123")){
 
                         // Creating user login session
                         // For testing i am stroing name, email as follow
                         // Use user real data
-                        sesion.crearSesion(username, "email");
+                        sesion.crearSesion(username, password);
 
                         // Staring MainActivity
                         Intent i = new Intent(getApplicationContext(), Menu.class);

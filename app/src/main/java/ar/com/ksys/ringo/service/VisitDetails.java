@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import ar.com.ksys.ringo.R;
 import ar.com.ksys.ringo.VisitorActivity;
+import ar.com.ksys.ringo.integrated.Menu;
 
 /**
  * Created by Escritorio on 28/02/2016.
@@ -79,7 +80,7 @@ public class VisitDetails extends AppCompatActivity {
             HttpClient httpClient = new DefaultHttpClient();
             nroVisita = Integer.parseInt(params[0]);
             HttpGet del = new HttpGet("http://"+ VisitorActivity.dirIp+"/doorbell/api/visits/"+nroVisita);
-                String credentials = "ringo" + ":" + "ringo-123";
+                String credentials = Menu.nombre + ":" + Menu.password;
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
                 //del.setHeader("content-type", "application/json");
@@ -127,7 +128,7 @@ public class VisitDetails extends AppCompatActivity {
             HttpClient httpClient = new DefaultHttpClient();
             url = params[0];
             HttpGet del = new HttpGet(url);
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             //del.setHeader("content-type", "application/json");

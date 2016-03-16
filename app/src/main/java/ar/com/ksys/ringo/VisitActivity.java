@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import ar.com.ksys.ringo.integrated.CustomArrayAdapter;
+import ar.com.ksys.ringo.integrated.Menu;
 import ar.com.ksys.ringo.service.VisitDetails;
 
 /**
@@ -119,7 +120,7 @@ public class VisitActivity extends AppCompatActivity {
             for (j = 1; j < 200; j++) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet del = new HttpGet("http://"+VisitorActivity.dirIp+"/doorbell/api/visits/?page=" + j);
-                String credentials = "ringo" + ":" + "ringo-123";
+                String credentials = Menu.nombre + ":" + Menu.password;
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
                 try {
@@ -171,7 +172,7 @@ public class VisitActivity extends AppCompatActivity {
             i = Integer.parseInt(params[1]);
             j = Integer.parseInt(params[2]);
             HttpGet del = new HttpGet(url);
-            String credentials = "ringo" + ":" + "ringo-123";
+            String credentials = Menu.nombre + ":" + Menu.password;
             String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
             del.addHeader("Authorization", "Basic " + base64EncodedCredentials);
             try {
